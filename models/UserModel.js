@@ -1,49 +1,57 @@
 import { Sequelize } from "sequelize";
 import db from "../config/Database.js";
 
-const {DataTypes} = Sequelize;
+const { DataTypes } = Sequelize;
 
-const Users = db.define('users',{
-    uuid:{
+// Definisikan model untuk entitas "User"
+const Users = db.define('users', {
+    // UUID yang dihasilkan secara otomatis untuk mengidentifikasi pengguna
+    uuid: {
         type: DataTypes.STRING,
         defaultValue: DataTypes.UUIDV4,
         allowNull: false,
-        validate:{
+        validate: {
             notEmpty: true
         }
     },
-    name:{
+    // Nama pengguna dengan batasan panjang antara 3 dan 100 karakter
+    name: {
         type: DataTypes.STRING,
         allowNull: false,
-        validate:{
+        validate: {
             notEmpty: true,
             len: [3, 100]
         }
     },
-    email:{
+    // Alamat email pengguna dengan validasi format email
+    email: {
         type: DataTypes.STRING,
         allowNull: false,
-        validate:{
+        validate: {
             notEmpty: true,
             isEmail: true
         }
     },
-    password:{
+    // Kata sandi pengguna
+    password: {
         type: DataTypes.STRING,
         allowNull: false,
-        validate:{
+        validate: {
             notEmpty: true
         }
     },
-    role:{
+    // Peran atau peran pengguna (misalnya: 'admin', 'user')
+    role: {
         type: DataTypes.STRING,
         allowNull: false,
-        validate:{
+        validate: {
             notEmpty: true
         }
     }
-},{
+}, {
+    // Konfigurasi untuk membekukan nama tabel menjadi "users"
     freezeTableName: true
 });
 
+// Ekspor model "Users" untuk digunakan di tempat lain
 export default Users;

@@ -2,44 +2,52 @@ import { Sequelize } from "sequelize";
 import db from "../config/Database.js";
 import Users from "./UserModel.js";
 
-const {DataTypes} = Sequelize;
+const { DataTypes } = Sequelize;
 
-const Products = db.define('product',{
-    uuid:{
+// Definisikan model untuk entitas "Product"
+const Products = db.define('product', {
+    // UUID yang dihasilkan secara otomatis untuk mengidentifikasi produk
+    uuid: {
         type: DataTypes.STRING,
         defaultValue: DataTypes.UUIDV4,
         allowNull: false,
-        validate:{
+        validate: {
             notEmpty: true
         }
     },
-    name:{
+    // Nama produk dengan batasan panjang antara 3 dan 100 karakter
+    name: {
         type: DataTypes.STRING,
         allowNull: false,
-        validate:{
+        validate: {
             notEmpty: true,
-            len: [3, 100]
+            len: [3, 100]//jumlah karakter batas bawah dan atas
         }
     },
-    price:{
+    // Harga produk
+    price: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        validate:{
+        validate: {
             notEmpty: true
         }
     },
-    userId:{
+    // Kunci asing yang menghubungkan produk dengan pengguna yang membuatnya
+    userId: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        validate:{
+        validate: {
             notEmpty: true
         }
     }
-},{
+}, {
+    // Konfigurasi untuk membekukan nama tabel menjadi "product"
     freezeTableName: true
 });
 
+// Hubungan antara "User" dan "Product"
 Users.hasMany(Products);
-Products.belongsTo(Users, {foreignKey: 'userId'});
+Products.belongsTo(Users, { foreignKey: 'userId' });
 
+// Ekspor model "Products" untuk digunakan di tempat lain
 export default Products;
