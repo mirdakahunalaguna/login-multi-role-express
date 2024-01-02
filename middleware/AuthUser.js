@@ -1,6 +1,4 @@
-import User from "../models/UserModel.js";
-
-import User from "../models/UserModel.js";
+import User from "../models/UserModel.js"; 
 
 // Middleware untuk memeriksa apakah pengguna telah login
 export const verifyUser = async (req, res, next) => {
@@ -27,10 +25,7 @@ export const verifyUser = async (req, res, next) => {
         res.status(500).json({msg: error.message});
     }
 };
-
-
-import User from "../models/UserModel.js";
-
+ 
 // Middleware untuk memeriksa apakah pengguna memiliki peran admin
 export const adminOnly = async (req, res, next) => {
     try {
