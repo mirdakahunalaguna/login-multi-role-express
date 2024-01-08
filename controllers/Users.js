@@ -8,7 +8,7 @@ export const getUsers = async (req, res) => {
             attributes: ['uuid', 'name', 'email', 'role']
         });
         // 2. Kirim respons dengan daftar pengguna
-        res.status(200).json(response);
+    res.status(200).json(response );
     } catch (error) {
         // 3. Tangani kesalahan server
         res.status(500).json({msg: error.message});
@@ -35,26 +35,39 @@ export const getUserById = async (req, res) => {
 
 
 export const createUser = async (req, res) => {
-    const {name, email, password, confPassword, role} = req.body;
-    // 1. Validasi kata sandi dan konfirmasi kata sandi
-    if (password !== confPassword) return res.status(400).json({msg: "Password dan Confirm Password tidak cocok"});
-    // 2. Hash kata sandi
-    const hashPassword = await argon2.hash(password);
-    try {
-        // 3. Buat pengguna baru
-        await User.create({
-            name: name,
-            email: email,
-            password: hashPassword,
-            role: role
-        });
-        // 4. Kirim respons dengan pesan berhasil
-        res.status(201).json({msg: "Register Berhasil"});
-    } catch (error) {
-        // 5. Tangani kesalahan server
-        res.status(400).json({msg: error.message});
+  const { name, email, password, confPassword, role } = req.body;
+  // 1. Validasi kata sandi dan konfirmasi kata sandi
+  if (password !== confPassword) {
+    return res.status(400).json({ msg: "Password dan Confirm Password tidak cocok" });
+  }
+  try {
+    // 2. Cek apakah email sudah terdaftar
+    const existingUser = await User.findOne({
+      where: {
+        email: email,
+      },
+    });
+    // Jika email sudah terdaftar, kirim respons kesalahan
+    if (existingUser) {
+      return res.status(400).json({ msg: "Email sudah terdaftar" });
     }
+    // 3. Hash kata sandi
+    const hashPassword = await argon2.hash(password);
+    // 4. Buat pengguna baru
+    await User.create({
+      name: name,
+      email: email,
+      password: hashPassword,
+      role: role,
+    });
+    // 5. Kirim respons dengan pesan berhasil
+    res.status(201).json({ msg: "Register Berhasil" });
+  } catch (error) {
+    // 6. Tangani kesalahan server
+    res.status(500).json({ msg: "Terjadi kesalahan server" });
+  }
 };
+
 
 
 export const updateUser = async (req, res) => {

@@ -21,7 +21,7 @@ export const Login = async (req, res) => {
     const name = user.name;
     const email = user.email;
     const role = user.role;
-    res.status(200).json({uuid, name, email, role});
+    res.status(200).json({uuid, name, email, role,msg: "berhasil login"});
 };
 
 export const Me = async (req, res) => {
